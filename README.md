@@ -34,7 +34,6 @@ mlops-scrapping/
    python -m venv venv
    source venv/bin/activate  # Mac/Linux
    venv\Scripts\activate     # Windows
-   pip install -r requirements.txt
    ```
 4. **Install dependencies:**
    ```bash
@@ -55,10 +54,10 @@ python data/clean_data.py
 
 ## 🛠️ Teknologi yang Digunakan
 - **Python** 🐍 → Bahasa utama dalam pengolahan data dan otomasi workflow
-- **Scholarly** → Untuk scraping publikasi akademik
-- **pandas** → Untuk manipulasi data
-- **spaCy** → Untuk pembersihan teks (lemmatization, stopword removal, dsb.)
-- **MLOps workflow** → Untuk otomatisasi
+- **Scholarly** 🔍 → Untuk scraping publikasi akademik dari Google Scholar
+- **pandas** 📊 → Untuk manipulasi dan analisis data
+- **spaCy** 📝 → Untuk pembersihan teks seperti lemmatization dan stopword removal
+- **MLOps workflow** ⚙️ → Untuk otomatisasi pipeline
 
 ## 📄 Penjelasan
 ### **`scrape.py` (Scraping Judul Penelitian)**
@@ -72,4 +71,5 @@ python data/clean_data.py
 - Menyimpan hasil bersih ke `data/dataset-cleaned.csv`.
 
 ## 📊 Hasil
-Hasil scraping disimpan dalam `data/research_titles.csv`, sedangkan data yang telah dibersihkan tersimpan dalam `data/dataset-cleaned.csv`.
+✅ **Hasil scraping** disimpan dalam **`data/research_titles.csv`**.  
+✅ **Hasil preprocessing** tersimpan dalam **`data/dataset-cleaned.csv`**.  
