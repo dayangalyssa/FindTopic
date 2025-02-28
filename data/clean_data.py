@@ -21,7 +21,7 @@ def preprocess(text):
 
 df["Cleaned_Title"] = df["Title"].apply(preprocess)
 
-df["Cleaned_Title"].to_csv("../data/dataset-cleaned.csv", index=False)
+df[["Title", "Cleaned_Title"]].to_csv("../data/dataset-cleaned.csv", index=False)
 
 print("\nData setelah pre-processing disimpan di data/data_cleaned.csv")
 
