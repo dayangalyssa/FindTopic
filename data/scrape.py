@@ -1,54 +1,56 @@
 import os
-from scholarly import scholarly
+import time
 import pandas as pd
+from scholarly import scholarly
 
-# Nama file CSV untuk menyimpan data
-csv_file = "data/research_titles.csv"
+# Nama file CSV
+csv_file = "data/research_articles.csv"
 
-# Membuat folder data jika belum ada
+# Buat folder data jika belum ada
 os.makedirs("data", exist_ok=True)
 
-# 🟢 1. Cek apakah file CSV sudah ada
+# Cek file lama
 if os.path.exists(csv_file):
-    # Baca data lama dari CSV
     df_existing = pd.read_csv(csv_file)
-    print(f"📂 File ditemukan. {len(df_existing)} data lama dimuat.")
+    print(f"File ditemukan. {len(df_existing)} data lama dimuat.")
 else:
-    # Jika belum ada, buat DataFrame kosong
     df_existing = pd.DataFrame(columns=["Title", "Year", "Authors", "URL"])
-    print("📁 File tidak ditemukan. Membuat file baru.")
+    print("File tidak ditemukan. Membuat file baru.")
 
-# 🟢 2. Lakukan scraping 50 jurnal baru
-search_results = scholarly.search_pubs_custom_url("/scholar?as_ylo=2020&as_yhi=2025")
-new_titles = []
+# Mulai pencarian
+query = "Artificial Intelligence OR IoT OR Machine Learning"
+search_results = scholarly.search_pubs_custom_url(f"/scholar?hl=en&as_ylo=2020&as_yhi=2025&q={query}")
 
-for i in range(50):
+new_articles = []
+count = 0
+max_articles = 1000
+
+while count < max_articles:
     try:
         paper = next(search_results)
         title = paper["bib"]["title"]
         year = paper["bib"].get("pub_year", "Unknown")
         authors = ", ".join(paper["bib"].get("author", []))
         url = paper.get("pub_url", "No URL")
-        
-        # Tampilkan di terminal
-        print(f"Title: {title}")
-        print(f"Author(s): {authors}")
-        print(f"Year: {year}")
-        print(f"URL: {url}")
-        print("-" * 50)
 
-        # Simpan ke list untuk CSV
-        new_titles.append({"Title": title, "Year": year, "Authors": authors, "URL": url})
-    
+        print(f"{count+1}. {title} ({year})")
+        
+        new_articles.append({"Title": title, "Year": year, "Authors": authors, "URL": url})
+        count += 1
+
+        # Hindari pemblokiran dengan delay
+        time.sleep(1)
+
     except StopIteration:
-        print("❌ Tidak ada lagi hasil yang ditemukan.")
+        print("Tidak ada lagi hasil yang ditemukan.")
+        break
+    except Exception as e:
+        print(f"⚠ Error: {e}")
         break
 
-# 🟢 3. Gabungkan data lama dan data baru
-df_new = pd.DataFrame(new_titles)
+# Gabungkan dan simpan ke CSV
+df_new = pd.DataFrame(new_articles)
 df_combined = pd.concat([df_existing, df_new], ignore_index=True).drop_duplicates()
+df_combined.to_csv(csv_file, index=False, encoding="utf-8")
 
-# 🟢 4. Simpan kembali ke file CSV
-df_combined.to_csv(csv_file, index=False, encoding='utf-8')
-
-print(f"✅ Scraping selesai! Data tersimpan di {csv_file} dengan total {len(df_combined)} entri.")
+print(f"Scraping selesai! Data tersimpan di {csv_file} dengan total {len(df_combined)} entri.")
