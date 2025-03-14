@@ -1,4 +1,4 @@
-# 📌 MLOps Data Scraping and Cleaning for Topic Modeling
+# 📌 FindTopic
 
 ## 📖 Deskripsi Proyek
  **Proyek ini dirancang untuk mengotomatisasi pengumpulan dan pembersihan data penelitian menggunakan pendekatan MLOps, sehingga mempermudah analisis dan penerapan topic modeling secara efisien!** 📚📋
@@ -7,9 +7,11 @@
 ```
 mlops-scrapping/
 │── data/                 # Folder untuk menyimpan dataset
-│   ├── research_titles.csv  # Hasil scraping
-│   ├── dataset-cleaned.csv  # Data yang bersih setelah preprocessing
-│   ├── clean_data.py        # Script untuk preprocessing
+│   ├── research_titles.json  # Hasil scraping
+│   ├── processed_articles.json  # Data yang bersih setelah preprocessing
+│── script/                 # Folder untuk menyimpan dataset
+│   ├── embeddings.py        # Script untuk embedding dengan TF-IDF
+│   ├── explore_data.py      # Script untuk EDA dan Preprocessing
 │   ├── scrape.py            # Script untuk scraping
 │── models/               # Model hasil training
 │── notebooks/            # Notebook eksplorasi data
@@ -42,14 +44,14 @@ mlops-scrapping/
 
 ## 💻 Cara Menjalankan
 ### **1️⃣ Scraping Data**
-Untuk menjalankan scraping dan menyimpan hasilnya di `data/research_titles.csv`, jalankan:
+Untuk menjalankan scraping dan menyimpan hasilnya di `data/research_titles.json`, jalankan:
 ```bash
 python data/scrape.py
 ```
 ### **2️⃣ Membersihkan Data**
-Untuk membersihkan data yang sudah di-scrape dan menyimpannya di `data/dataset-cleaned.csv`, jalankan:
+Untuk membersihkan data yang sudah di-scrape dan menyimpannya di `data/processed_articles.json`, jalankan:
 ```bash
-python data/clean_data.py
+python data/explore_data.py
 ```
 
 ## 🛠️ Teknologi yang Digunakan
@@ -63,13 +65,13 @@ python data/clean_data.py
 ### **`scrape.py` (Scraping Judul Penelitian)**
 - Melakukan pencarian publikasi akademik menggunakan Scholarly.
 - Mengambil judul, tahun, penulis, dan URL publikasi.
-- Menyimpan hasil dalam `data/research_titles.csv`.
+- Menyimpan hasil dalam `data/research_titles.json`.
 
 ### **`clean_data.py` (Pembersihan Data)**
 - Membaca data dari `data/research_titles.csv`.
 - Menggunakan spaCy untuk lemmatization dan stopword removal.
-- Menyimpan hasil bersih ke `data/dataset-cleaned.csv`.
+- Menyimpan hasil bersih ke `data/processed_articles.json`.
 
 ## 📊 Hasil
-✅ **Hasil scraping** disimpan dalam **`data/research_titles.csv`**.  
-✅ **Hasil preprocessing** tersimpan dalam **`data/dataset-cleaned.csv`**.  
+✅ **Hasil scraping** disimpan dalam **`data/research_titles.json`**.  
+✅ **Hasil preprocessing** tersimpan dalam **`data/processed_articles.json`**.  

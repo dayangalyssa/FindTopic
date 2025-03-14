@@ -27,10 +27,18 @@ def preprocess(text):
 # Terapkan preprocessing ke judul
 df["Cleaned_Title"] = df["Title"].apply(preprocess)
 
+# Cek apakah preprocessing berjalan dengan baik
+print(df[["Title", "Cleaned_Title"]].head(10))
+
 # Kata Paling Sering Muncul (setelah preprocessing)
 all_words = " ".join(df["Cleaned_Title"]).split()
 word_counts = Counter(all_words)
+common_words = word_counts.most_common(50)  # Ambil 50 kata paling umum
 print("\n10 Kata Paling Umum:", word_counts.most_common(10))
+
+# Simpan hasil preprocessing hanya kolom Cleaned_Title ke file JSON
+df[["Cleaned_Title"]].to_json("data/processed_articles.json", orient="records", indent=4)
+print("\nHasil preprocessing telah disimpan ke 'data/processed_articles.json'.")
 
 # Visualisasi WordCloud setelah preprocessing
 text = " ".join(df["Cleaned_Title"])
@@ -50,4 +58,15 @@ plt.hist(df["cleaned_text_length"], bins=20, color='skyblue', edgecolor='black')
 plt.xlabel("Jumlah Kata per Judul (Setelah Preprocessing)")
 plt.ylabel("Frekuensi")
 plt.title("Distribusi Panjang Judul Artikel (Setelah Preprocessing)")
+plt.show()
+
+words, counts = zip(*common_words)  # Pisahkan kata dan frekuensinya
+
+plt.figure(figsize=(12, 6))
+plt.scatter(range(len(words)), counts, color='red', alpha=0.6)
+plt.xticks(range(len(words)), words, rotation=90)  
+plt.xlabel("Kata")
+plt.ylabel("Frekuensi Kemunculan")
+plt.title("Sebaran Frekuensi Kata dalam Judul Artikel")
+plt.grid(True, linestyle='--', alpha=0.5)
 plt.show()
