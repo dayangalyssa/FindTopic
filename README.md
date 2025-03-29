@@ -1,7 +1,7 @@
 # 📌 FindTopic
 
 ## 📖 Deskripsi Proyek
- **Proyek ini dirancang untuk mengotomatisasi pengumpulan dan pembersihan data penelitian menggunakan pendekatan MLOps, sehingga mempermudah analisis dan penerapan topic modeling secara efisien!** 📚📋
+ **FindTopic dirancang untuk mengotomatisasi pengumpulan dan pembersihan data penelitian menggunakan pendekatan MLOps, sehingga mempermudah analisis dan penerapan topic modeling secara efisien!** 📚📋
 
 ## 📂 Struktur Direktori
 ```

@@ -5,14 +5,14 @@ import math
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-with open("data/processed_articles.json", "r") as f:
+with open("data/data_preprocessed.json", "r") as f:
     df = pd.DataFrame(json.load(f))
 
 corpus = df["Cleaned_Title"].fillna("")
 
 documents = corpus.tolist()
 
-vectorizer = TfidfVectorizer(max_features=500)  # Batasi ke 500 kata fitur terpenting
+vectorizer = TfidfVectorizer()  
 tfidf_matrix = vectorizer.fit_transform(documents)
 
 tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())

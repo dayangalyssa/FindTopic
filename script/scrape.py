@@ -1,56 +1,100 @@
+import requests
+import json
 import os
 import time
-import pandas as pd
-from scholarly import scholarly
+from bs4 import BeautifulSoup
 
-# Nama file CSV
-csv_file = "data/research_articles.csv"
+topik_list = ["komputer", "sosial budaya", "pertanian"]
+headers = {"User-Agent": "Mozilla/5.0"}
+max_data_per_topic = 100
+start_page = 1
+reverse_mode = False
+session = requests.Session()
 
-# Buat folder data jika belum ada
-os.makedirs("data", exist_ok=True)
+filename = "data_scraping.json"
 
-# Cek file lama
-if os.path.exists(csv_file):
-    df_existing = pd.read_csv(csv_file)
-    print(f"File ditemukan. {len(df_existing)} data lama dimuat.")
+# Cek apakah file sudah ada dan baca data lama
+if os.path.exists(filename):
+    with open(filename, "r", encoding="utf-8") as f:
+        try:
+            all_scraped_data = json.load(f)
+        except json.JSONDecodeError:
+            all_scraped_data = []  # Jika file kosong atau rusak, mulai dari awal
 else:
-    df_existing = pd.DataFrame(columns=["Title", "Year", "Authors", "URL"])
-    print("File tidak ditemukan. Membuat file baru.")
+    all_scraped_data = []
 
-# Mulai pencarian
-query = "Artificial Intelligence OR IoT OR Machine Learning"
-search_results = scholarly.search_pubs_custom_url(f"/scholar?hl=en&as_ylo=2020&as_yhi=2025&q={query}")
+# Loop untuk setiap topik
+for topik in topik_list:
+    print(f"Memulai scraping untuk topik: {topik}")
+    scraped_data = []
+    base_url = f"https://garuda.kemdikbud.go.id/documents?page={{}}&q={topik}&select=title"
 
-new_articles = []
-count = 0
-max_articles = 1000
+    while len(scraped_data) < max_data_per_topic:
+        url = base_url.format(start_page)
 
-while count < max_articles:
-    try:
-        paper = next(search_results)
-        title = paper["bib"]["title"]
-        year = paper["bib"].get("pub_year", "Unknown")
-        authors = ", ".join(paper["bib"].get("author", []))
-        url = paper.get("pub_url", "No URL")
+        try:
+            response = session.get(url, headers=headers)
+            
+            if response.status_code == 200:
+                soup = BeautifulSoup(response.text, "html.parser")
+                articles = soup.find_all("div", class_="article-item")
 
-        print(f"{count+1}. {title} ({year})")
-        
-        new_articles.append({"Title": title, "Year": year, "Authors": authors, "URL": url})
-        count += 1
+                if not articles:
+                    print(f"Tidak ada artikel di halaman {start_page}, berhenti scraping untuk {topik}.")
+                    break
 
-        # Hindari pemblokiran dengan delay
-        time.sleep(1)
+                for article in articles:
+                    title_tag = article.find("a", class_="title-article")
+                    title = title_tag.get_text(strip=True) if title_tag else "Tidak ada judul"
 
-    except StopIteration:
-        print("Tidak ada lagi hasil yang ditemukan.")
-        break
-    except Exception as e:
-        print(f"⚠ Error: {e}")
-        break
+                    author_tag = article.find("a", class_="author-article")
+                    author = author_tag.get_text(strip=True) if author_tag else "Tidak ada author"
 
-# Gabungkan dan simpan ke CSV
-df_new = pd.DataFrame(new_articles)
-df_combined = pd.concat([df_existing, df_new], ignore_index=True).drop_duplicates()
-df_combined.to_csv(csv_file, index=False, encoding="utf-8")
+                    subtitle_tag = article.find("xmp", class_="subtitle-article")
+                    year = "Tidak ada tahun"
+                    if subtitle_tag:
+                        try:
+                            year = subtitle_tag.text.strip().split("(")[1].split(")")[0]
+                        except IndexError:
+                            pass
 
-print(f"Scraping selesai! Data tersimpan di {csv_file} dengan total {len(df_combined)} entri.")
+                    scraped_data.append({
+                        "Judul": title,
+                        "Tahun": year,
+                        "Author": author
+                    })
+
+                    if len(scraped_data) >= max_data_per_topic:
+                        break
+
+                print(f"Halaman {start_page} selesai untuk topik '{topik}', total data: {len(scraped_data)}")
+
+                start_page = start_page - 1 if reverse_mode else start_page + 1
+
+                time.sleep(5)
+
+            else:
+                print(f"Gagal mengakses halaman {start_page} untuk topik '{topik}', status: {response.status_code}")
+                break
+
+        except requests.RequestException as e:
+            print(f"Error saat mengakses {url}: {e}")
+            break
+
+    if scraped_data:
+        # Cek apakah topik sudah ada dalam data lama
+        existing_topic = next((item for item in all_scraped_data if item["topik"] == topik), None)
+
+        if existing_topic:
+            existing_topic["data"].extend(scraped_data)  # Tambahkan data baru ke topik lama
+        else:
+            all_scraped_data.append({
+                "topik": topik,
+                "data": scraped_data
+            })
+
+# Simpan hasil scraping ke JSON
+with open(filename, "w", encoding="utf-8") as f:
+    json.dump(all_scraped_data, f, indent=4, ensure_ascii=False)
+
+print(f"Scraping selesai! Semua data tersimpan di '{filename}'")

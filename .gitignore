@@ -1,4 +1,3 @@
-tfidf_results.csv
 venv/
 *.pyc
 __pycache__/
