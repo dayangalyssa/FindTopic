@@ -5,7 +5,7 @@ import math
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-with open("data/data_preprocessed.json", "r") as f:
+with open("data/data_cleaned.json", "r") as f:
     df = pd.DataFrame(json.load(f))
 
 corpus = df["Cleaned_Title"].fillna("")
