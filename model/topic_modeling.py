@@ -7,16 +7,13 @@ from gensim.models.coherencemodel import CoherenceModel
 from gensim.corpora import Dictionary
 from gensim.utils import simple_preprocess
 
-# Fungsi untuk melatih model
 def train_topic_model(input_file, output_file, model_path):
     # ================== 1. Load & siapkan data ==================
     with open(input_file, "r", encoding="utf-8") as f:
         raw_data = json.load(f)
 
-    # Ubah ke DataFrame
     df = pd.DataFrame(raw_data)
 
-    # Ambil teks
     docs = df["Cleaned_Title"].tolist()
 
     # ================== 2. Training BERTopic ==================
@@ -27,13 +24,12 @@ def train_topic_model(input_file, output_file, model_path):
 
     # ================== 3. Evaluasi: Coherence Score ==================
     print("🧪 Evaluasi coherence score...")
-    # Tokenisasi sederhana untuk gensim
+    
     texts = [simple_preprocess(doc) for doc in docs]
     dictionary = Dictionary(texts)
     corpus = [dictionary.doc2bow(text) for text in texts]
     topic_words = topic_model.get_topics()
 
-    # Ambil topik-topik dan ambil hanya kata-katanya
     topic_keywords = [[word for word, _ in topic_words[topic]] for topic in topic_words if topic != -1]
 
     coherence_model = CoherenceModel(topics=topic_keywords, texts=texts, dictionary=dictionary, coherence='c_v')
@@ -45,7 +41,6 @@ def train_topic_model(input_file, output_file, model_path):
     os.makedirs("bertopic_model", exist_ok=True)
     topic_model.save(os.path.join("bertopic_model", "bertopic_model.pkl"), save_embedding_model=False)
 
-    # Simpan data dengan topik
     df['Predicted_Topic'] = topics
     df.to_json(output_file, orient="records", indent=4, force_ascii=False)
 
@@ -54,10 +49,8 @@ def train_topic_model(input_file, output_file, model_path):
     # ================== 5. Visualisasi & Eksplorasi ==================
     print("🎨 Menyimpan visualisasi topik ke folder data/saved_model/")
 
-    # Pastikan foldernya ada
     os.makedirs("../data/saved_model", exist_ok=True)
 
-    # Simpan visualisasi topik sebagai file HTML
     topic_model.visualize_topics().write_html("../data/saved_model/topics_overview.html")
     topic_model.visualize_barchart().write_html("../data/saved_model/barchart.html")
     topic_model.visualize_heatmap(top_n_topics=10).write_html("../data/saved_model/heatmap.html")
