@@ -1,4 +1,3 @@
-# script/main.py
 import json
 import os
 from fastapi import FastAPI
@@ -19,15 +18,14 @@ def run_scraping():
 @app.get("/results")
 def show_preprocessed():
     cleaned = preprocess_data()
-    return {"message": "Hasil preprocessing", "data": cleaned[:5]}  # tampilkan 5 data awal saja
+    return {"message": "Hasil preprocessing", "data": cleaned[:5]}
 
 @app.get("/view")
 def view_scraped_data():
-    path = "data/data_scraping.json"
+    path = "data_api/data_scrape.json"
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
         return {"message": "Data hasil scraping", "jumlah_data": len(data), "data": data[:5]}
     else:
         return {"error": "File data_scraping.json tidak ditemukan"}
-

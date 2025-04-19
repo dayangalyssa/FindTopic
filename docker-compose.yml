@@ -1,0 +1,10 @@
+
+services:
+  fastapi-app:
+    build: .
+    container_name: fastapi-scraper
+    volumes:
+      - ./data_api:/app/data_api  
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
