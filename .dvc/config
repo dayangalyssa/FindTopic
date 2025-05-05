@@ -1,0 +1,6 @@
+[core]
+    remote = local_remote
+['remote "dvc_track"']
+    url = gdrive://1fzaEW_cXr_8Z_0UkDnhuufsOlAFuYKxp
+['remote "local_remote"']
+    url = ../dvc_track
