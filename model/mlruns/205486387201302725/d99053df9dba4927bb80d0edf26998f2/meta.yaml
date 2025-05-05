@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/athiy/mlops-scrapping-1/model/mlruns/205486387201302725/d99053df9dba4927bb80d0edf26998f2/artifacts
+end_time: 1745307520369
+entry_point_name: ''
+experiment_id: '205486387201302725'
+lifecycle_stage: active
+run_id: d99053df9dba4927bb80d0edf26998f2
+run_name: bustling-hen-872
+run_uuid: d99053df9dba4927bb80d0edf26998f2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745307224387
+status: 3
+tags: []
+user_id: athiy
