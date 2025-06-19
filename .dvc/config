@@ -1,6 +1,9 @@
 [core]
-    remote = local_remote
+    remote = gdrive_remote
 ['remote "dvc_track"']
     url = gdrive://1fzaEW_cXr_8Z_0UkDnhuufsOlAFuYKxp
 ['remote "local_remote"']
     url = ../dvc_track
+['remote "gdrive_remote"']
+    url = gdrive://1fzaEW_cXr_8Z_0UkDnhuufsOlAFuYKxp
+    gdrive_use_service_account = true

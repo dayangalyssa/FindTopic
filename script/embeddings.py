@@ -5,7 +5,7 @@ import math
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-with open("data/data_cleaned.json", "r") as f:
+with open("data_api/data_clean/data_clean.json", "r") as f:
     df = pd.DataFrame(json.load(f))
 
 corpus = df["Cleaned_Title"].fillna("")
@@ -17,9 +17,9 @@ tfidf_matrix = vectorizer.fit_transform(documents)
 
 tfidf_df = pd.DataFrame(tfidf_matrix.toarray(), columns=vectorizer.get_feature_names_out())
 
-tfidf_df.to_csv("data/tfidf_results.csv", index=False)
+tfidf_df.to_csv("data_api/tfidf_results.csv", index=False)
 
-print("\nHasil TF-IDF telah disimpan ke 'data/tfidf_results.csv'.")
+print("\nHasil TF-IDF telah disimpan ke 'data_api/tfidf_results.csv'.")
 
 word_scores = tfidf_df.sum(axis=0).sort_values(ascending=False)
 

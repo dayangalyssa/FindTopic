@@ -1,1 +1,0 @@
-BERTopic.fit_transform() got an unexpected keyword argument 'calculate_probabilities'

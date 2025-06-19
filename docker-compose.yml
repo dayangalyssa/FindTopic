@@ -1,4 +1,3 @@
-
 services:
   fastapi-app:
     build: .
@@ -8,3 +7,44 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+    networks:
+      - monitoring
+
+# Prometheus service
+  prometheus:
+    image: prom/prometheus:v2.42.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data_api:/app/data_api
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.listen-address=:9090'
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+# Grafana service
+  grafana:
+    image: grafana/grafana:9.5.15-ubuntu
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_SECURITY_ADMIN_USER=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    networks:
+      - monitoring
+
+volumes:
+  grafana_data:
+
+networks:
+  monitoring:
+    driver: bridge
+

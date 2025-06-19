@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Users/USER/mlops-scrapping/script/mlruns/980153639206878388
+creation_time: 1750335622517
+experiment_id: '980153639206878388'
+last_update_time: 1750335622517
+lifecycle_stage: active
+name: BERTopic_Experiment

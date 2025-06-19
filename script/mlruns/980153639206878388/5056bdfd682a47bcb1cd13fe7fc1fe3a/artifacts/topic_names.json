@@ -1,0 +1,20 @@
+{
+    "-1": "Outlier",
+    "0": "Cost, Company, Customer",
+    "1": "Cell, Protein, Gene",
+    "2": "Surface, Material, Use",
+    "3": "Control, Robot, System",
+    "4": "Firm, Essay, Chapter",
+    "5": "Program, System, Lisp",
+    "6": "Urban, City, Place",
+    "7": "Fuel, Arc, Flow",
+    "8": "Group, Prove, Algebra",
+    "9": "Image, Scene, View",
+    "10": "Energy, Emission, Cost",
+    "11": "Quantum, Pulse, Laser",
+    "12": "Neutrino, Event, Detector",
+    "13": "Star, Binary, Ray",
+    "14": "Language, Argument, Argue",
+    "15": "Ocean, Channel, Sediment",
+    "16": "Cortex, Synaptic, Visual"
+}

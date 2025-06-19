@@ -1,6 +1,0 @@
-artifact_location: file:///C:/Users/athiy/mlops-scrapping-1/model/mlruns/205486387201302725
-creation_time: 1745284968910
-experiment_id: '205486387201302725'
-last_update_time: 1745284968910
-lifecycle_stage: active
-name: BERTopic Experiment
